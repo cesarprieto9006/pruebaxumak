@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PruebaXumak</string>
+    <string name="not_data">No hay informacion para mostrar.</string>
+
 </resources>

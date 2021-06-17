@@ -9,10 +9,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+
+    viewBinding {
+        enabled = true
+    }
 
     defaultConfig {
         applicationId "com.example.pruebakumak"
@@ -70,7 +73,7 @@ dependencies {
     implementation 'com.google.dagger:hilt-android:2.28.1-alpha'
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01"
     kapt 'com.google.dagger:hilt-android-compiler:2.28.1-alpha'
-    kapt "androidx.hilt:hilt-compiler:1.0.0"
+    kapt "androidx.hilt:hilt-compiler:1.0.0-alpha01"
 
     //Room
     def room_version = "2.2.5"
@@ -89,5 +92,9 @@ dependencies {
 
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Paging 3
+    def pagingVersion = '3.0.0-alpha05'
+    implementation "androidx.paging:paging-runtime:$pagingVersion"
 
 }

@@ -1,16 +1,16 @@
-package com.example.pruebaxumak.local
+package com.example.pruebaxumak.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.pruebaxumak.entities.Data
+import com.example.pruebaxumak.screens.mainlist.model.MainResponse
 
 
-@Database(entities = [Data::class], version = 1, exportSchema = false)
+@Database(entities = [MainResponse::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun characterDao(): DataDao
+    abstract fun dataDao(): DataDao
 
     companion object {
         @Volatile private var instance: AppDatabase? = null
