@@ -5,18 +5,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.pruebaxumak.screens.mainlist.model.MainResponse
+import com.example.pruebaxumak.screens.mainlist.model.DataResponse
 
 @Dao
 interface DataDao {
     @Query("SELECT * FROM data")
-    fun getAllCharacters() : LiveData<List<MainResponse>>
+    fun getAllData() : LiveData<List<DataResponse>>
+
+    @Query("DELETE FROM data WHERE char_id=:id")
+    fun delete(id: Int) : LiveData<List<DataResponse>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(data: List<MainResponse>)
+    suspend fun insertAll(data: List<DataResponse>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(data: List<MainResponse>)
-
+    suspend fun insert(data: DataResponse)
 
 }

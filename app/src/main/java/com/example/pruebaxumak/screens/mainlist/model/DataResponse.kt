@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "data")
-data class MainResponse(
+data class DataResponse(
 
     @SerializedName("char_id")
     var char_id: Int,
@@ -24,6 +24,7 @@ data class MainResponse(
     @SerializedName("category")
     var category: String,
     @PrimaryKey
-    val id: Int
+    val id: Int,
+    val State:Boolean=false
 
 )

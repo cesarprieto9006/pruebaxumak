@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dataFragment"
-        android:name="com.example.pruebaxumak.screens.mainlist.view.DataFragment"
+        android:name="com.example.pruebaxumak.screens.mainlist.view.fragment.DataFragment"
         android:label="Characters"
         tools:layout="@layout/data_fragment" >
 

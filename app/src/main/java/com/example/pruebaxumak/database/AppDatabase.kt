@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.pruebaxumak.screens.mainlist.model.MainResponse
+import com.example.pruebaxumak.screens.mainlist.model.DataResponse
 
 
-@Database(entities = [MainResponse::class], version = 1, exportSchema = false)
+@Database(entities = [DataResponse::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun dataDao(): DataDao
@@ -23,5 +23,4 @@ abstract class AppDatabase : RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .build()
     }
-
 }

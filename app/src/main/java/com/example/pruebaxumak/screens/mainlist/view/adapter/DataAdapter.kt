@@ -1,71 +1,74 @@
 package com.example.pruebaxumak.screens.mainlist.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.pruebaxumak.R
 import com.example.pruebaxumak.databinding.ItemDataBinding
-import com.example.pruebaxumak.screens.mainlist.model.MainResponse
+import com.example.pruebaxumak.screens.mainlist.model.DataResponse
 
-class DataAdapter(private val listener : OnItemClickListener) : PagingDataAdapter<MainResponse, DataAdapter.MovieViewHolder>(COMPARATOR) {
+class DataAdapter(private val listener: DataItemListener) : RecyclerView.Adapter<DataViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val binding = ItemDataBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MovieViewHolder(binding)
+    interface DataItemListener {
+        fun onClickedFavorite(dataResponse: DataResponse)
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val currentItem = getItem(position)
-        if (currentItem != null) {
-            holder.bind(currentItem)
+    private val items = ArrayList<DataResponse>()
+
+    fun setItems(items: ArrayList<DataResponse>) {
+        this.items.clear()
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
+        val binding: ItemDataBinding =
+            ItemDataBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DataViewHolder(binding, listener)
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onBindViewHolder(holder: DataViewHolder, position: Int) =
+        holder.bind(items[position])
+}
+
+class DataViewHolder(
+    private val itemBinding: ItemDataBinding,
+    private val listener: DataAdapter.DataItemListener
+) : RecyclerView.ViewHolder(itemBinding.root),
+    View.OnClickListener {
+
+    private lateinit var data: DataResponse
+
+    init {
+        itemBinding.root.setOnClickListener(this)
+    }
+
+    fun bind(item: DataResponse) {
+        this.data = item
+        itemBinding.name.text = item.name
+        itemBinding.nickname.text = item.nickname
+        Glide.with(itemBinding.root)
+            .load(item.img)
+            .transform(CircleCrop())
+            .into(itemBinding.image)
+        itemBinding.favorites.setOnClickListener {
+            listener.onClickedFavorite(data)
         }
-    }
-
-    inner class MovieViewHolder(private val binding: ItemDataBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION){
-                    val item = getItem(position)
-                    if (item!=null){
-                        listener.onItemClick(item)
-                    }
-                }
+        when {
+            !data.State -> {
+                itemBinding.favorites.setImageResource(R.drawable.ic_heart_clk)
+            }
+            else -> {
+                itemBinding.favorites.setImageResource(R.drawable.ic_heart)
             }
         }
-
-        fun bind(data: MainResponse) {
-            with(binding) {
-                Glide.with(itemView)
-                    .load(data.img)
-                    .centerCrop()
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .error(R.drawable.ic_launcher_background)
-                    .into(image)
-                name.text = data.name
-                nickname.text=data.nickname
-            }
-        }
     }
 
-    interface OnItemClickListener{
-        fun onItemClick(data: MainResponse)
+    override fun onClick(v: View?) {
     }
-
-    companion object {
-        private val COMPARATOR = object : DiffUtil.ItemCallback<MainResponse>() {
-            override fun areItemsTheSame(oldItem: MainResponse, newItem: MainResponse): Boolean =
-                oldItem.id == newItem.id
-
-            override fun areContentsTheSame(oldItem: MainResponse, newItem: MainResponse): Boolean =
-                oldItem == newItem
-        }
-    }
-
 }

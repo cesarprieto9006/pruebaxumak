@@ -3,6 +3,7 @@ package com.example.pruebaxumak.di
 import android.content.Context
 import com.example.pruebaxumak.database.AppDatabase
 import com.example.pruebaxumak.remote.DataApi
+import com.example.pruebaxumak.utils.SuperAppConstants
 
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRetrofit() : Retrofit = Retrofit.Builder()
-        .baseUrl("https://www.breakingbadapi.com/")
+        .baseUrl(SuperAppConstants.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

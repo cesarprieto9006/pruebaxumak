@@ -1,13 +1,14 @@
 package com.example.pruebaxumak.remote
 
-import com.example.pruebaxumak.screens.mainlist.model.MainResponse
+import com.example.pruebaxumak.screens.mainlist.model.DataResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 
 interface DataApi {
 
-    @GET("api/characters?limit=50")
-    suspend fun getAllList(): List<MainResponse>
+    @GET("api/characters")
+    suspend fun getAllList(@Query("limit") limit: Int): List<DataResponse>
 
 
 }
