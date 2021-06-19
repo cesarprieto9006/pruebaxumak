@@ -1,14 +1,10 @@
 package com.example.pruebaxumak.di
 
 import android.content.Context
-import com.example.pruebaxumak.local.AppDatabase
-import com.example.pruebaxumak.local.DataDao
-import com.example.pruebaxumak.remote.DataRemoteDataSource
-import com.example.pruebaxumak.remote.DataService
-import com.example.pruebaxumak.repository.DataRepository
-import com.google.gson.Gson
+import com.example.pruebaxumak.database.AppDatabase
+import com.example.pruebaxumak.remote.DataApi
+import com.example.pruebaxumak.utils.SuperAppConstants
 
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,20 +20,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(gson: Gson) : Retrofit = Retrofit.Builder()
-        .baseUrl("")
-        .addConverterFactory(GsonConverterFactory.create(gson))
+    fun provideRetrofit() : Retrofit = Retrofit.Builder()
+        .baseUrl(SuperAppConstants.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     @Provides
-    fun provideGson(): Gson = GsonBuilder().create()
-
-    @Provides
-    fun provideCharacterService(retrofit: Retrofit): DataService = retrofit.create(DataService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideCharacterRemoteDataSource(characterService: DataService) = DataRemoteDataSource(characterService)
+    fun provideDataApi(retrofit: Retrofit): DataApi = retrofit.create(DataApi::class.java)
 
     @Singleton
     @Provides
@@ -45,12 +34,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCharacterDao(db: AppDatabase) = db.characterDao()
+    fun provideCharacterDao(db: AppDatabase) = db.dataDao()
 
-    @Singleton
-    @Provides
-    fun provideRepository(remoteDataSource: DataRemoteDataSource,
-                          localDataSource: DataDao
-    ) =
-        DataRepository(remoteDataSource, localDataSource)
 }
