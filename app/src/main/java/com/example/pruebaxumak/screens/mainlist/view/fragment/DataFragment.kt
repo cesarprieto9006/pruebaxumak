@@ -45,6 +45,7 @@ class DataFragment : Fragment(), DataAdapter.DataItemListener {
     }
 
     private fun setupObservers() {
+
         viewModel.userLiveData.observe(viewLifecycleOwner, Observer { getList ->
             binding.progressBar.visibility = View.GONE
             if (getList != null) {
@@ -54,10 +55,23 @@ class DataFragment : Fragment(), DataAdapter.DataItemListener {
             }
         })
 
-        viewModel.makeApiCall()
+        viewModel.stateData.observe(requireActivity(), Observer { state ->
+            if (state != null) {
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+        viewModel.getAllOderData.observe(requireActivity(), Observer { list ->
+            if (!list.isNullOrEmpty()) {
+                binding.progressBar.visibility = View.GONE
+                adapter.setItems(ArrayList(list))
+            }else {
+                viewModel.getData()
+            }
+        })
     }
 
     override fun onClickedFavorite(dataResponse: DataResponse) {
-            viewModel.logicFavorite(dataResponse)
+        viewModel.logicFavorite(dataResponse)
     }
 }

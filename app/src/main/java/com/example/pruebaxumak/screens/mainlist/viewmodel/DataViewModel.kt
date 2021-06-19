@@ -15,22 +15,33 @@ class DataViewModel @ViewModelInject constructor(
     private val _userLiveData = MutableLiveData<List<DataResponse>>()
     val userLiveData: LiveData<List<DataResponse>> = _userLiveData
 
+    private val _stateData = MutableLiveData<Boolean>()
+    val stateData: LiveData<Boolean> = _stateData
 
-    fun makeApiCall(){
-        viewModelScope.launch(Dispatchers.Main){
-            _userLiveData.value= repository.getList()
+
+    fun getData() {
+        viewModelScope.launch(Dispatchers.Main) {
+            val list= repository.getList()
+            repository.insertAll(list)
+            _userLiveData.value = list
         }
     }
 
-    fun logicFavorite(data:DataResponse){
-        if(data.State) {
+    fun logicFavorite(data: DataResponse) {
+        if (!data.State) {
+            data.State=true
             viewModelScope.launch(Dispatchers.Main) {
                 repository.saveFavorite(data)
             }
-        }else {
+        } else {
+            data.State=false
             viewModelScope.launch(Dispatchers.Main) {
-                repository.deleteFavorite(data.char_id)
+                repository.saveFavorite(data)
             }
         }
+        _stateData.value=true
     }
+
+    val getAllOderData: LiveData<List<DataResponse>> get() = repository.getAllFavoritesOrder()
+
 }

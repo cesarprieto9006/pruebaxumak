@@ -13,14 +13,24 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun dataDao(): DataDao
 
     companion object {
-        @Volatile private var instance: AppDatabase? = null
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
 
-        fun getDatabase(context: Context): AppDatabase =
-            instance ?: synchronized(this) { instance ?: buildDatabase(context).also { instance = it } }
+        private val LOCK = Any()
+        private var DB_NAME = "civica_database"
 
-        private fun buildDatabase(appContext: Context) =
-            Room.databaseBuilder(appContext, AppDatabase::class.java, "data")
-                .fallbackToDestructiveMigration()
-                .build()
+        fun getDatabase(context: Context): AppDatabase{
+            return INSTANCE ?: synchronized(LOCK) {
+                val instance = Room
+                    .databaseBuilder(
+                        context.applicationContext,
+                        AppDatabase::class.java,
+                        DB_NAME
+                    )
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
     }
 }

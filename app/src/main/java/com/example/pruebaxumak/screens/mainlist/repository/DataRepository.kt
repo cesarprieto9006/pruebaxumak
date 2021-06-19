@@ -5,6 +5,7 @@ import com.example.pruebaxumak.database.DataDao
 import com.example.pruebaxumak.remote.DataApi
 import com.example.pruebaxumak.screens.mainlist.model.DataResponse
 import com.example.pruebaxumak.utils.SuperAppConstants
+import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,11 +22,13 @@ class DataRepository @Inject constructor(
         localDataSource.insert(data)
     }
 
-    fun deleteFavorite(id:Int){
-        localDataSource.delete(id)
+    fun insertAll(list:List<DataResponse>){
+        Executors.newSingleThreadExecutor().execute {
+            localDataSource.insertAll(list)
+        }
     }
 
-    fun getAllFavorites(): LiveData<List<DataResponse>> =
-        localDataSource.getAllData()
+    fun getAllFavoritesOrder(): LiveData<List<DataResponse>> =
+        localDataSource.getAllDataOrder()
 
 }
